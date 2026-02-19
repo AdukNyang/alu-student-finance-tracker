@@ -63,6 +63,8 @@ function updateTransaction(id, description, amount, category, date) {
     }
     return false;
 }
+// ============ M5: Dashboard Statistics and Budget Cap ============
+
 // Calculate all the total expenses
 function getTotalExpenses() {
     return transactions.reduce((sum, txn) => sum + txn.amount, 0);
@@ -127,6 +129,8 @@ function getRemainingBudget() {
 function isBudgetExceeded() {
     return budgetCap > 0 && getTotalExpenses() > budgetCap;
 }
+// ============ M6: Data Persistence and Import/Export ============
+
 // LocalStorage keys
 const STORAGE_KEY = 'financeTrackerData';
 const SETTINGS_KEY = 'financeTrackerSettings';
