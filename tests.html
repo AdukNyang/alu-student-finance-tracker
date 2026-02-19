@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regex Tests - Student Finance Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .test-section {
+            background: white;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .test-section h2 {
+            color: #1abc9c;
+            border-bottom: 2px solid #1abc9c;
+            padding-bottom: 0.5rem;
+        }
+        .test-case {
+            margin: 1rem 0;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-left: 4px solid #3498db;
+        }
+        .pass {
+            color: green;
+            font-weight: bold;
+        }
+        .fail {
+            color: red;
+            font-weight: bold;
+        }
+        code {
+            background-color: #e8e8e8;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        .pattern {
+            background-color: #fff3cd;
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Regex Validation Tests</h1>
+    <p style="text-align: center;">Testing regex patterns used in Student Finance Tracker</p>
+
+    <div class="test-section">
+        <h2>1. Description Validation</h2>
+        <div class="pattern">
+            <strong>Pattern:</strong> <code>/^\S(?:.*\S)?$/</code><br>
+            <strong>Purpose:</strong> No leading/trailing spaces, no empty strings
+        </div>
+        <div id="desc-tests"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Amount Validation</h2>
+        <div class="pattern">
+            <strong>Pattern:</strong> <code>/^(0|[1-9]\d*)(\.\d{1,2})?$/</code><br>
+            <strong>Purpose:</strong> Positive number with optional 2 decimal places
+        </div>
+        <div id="amount-tests"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Date Validation</h2>
+        <div class="pattern">
+            <strong>Pattern:</strong> <code>/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/</code><br>
+            <strong>Purpose:</strong> YYYY-MM-DD format
+        </div>
+        <div id="date-tests"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. Category Validation</h2>
+        <div class="pattern">
+            <strong>Pattern:</strong> <code>/^[A-Za-z]+(?:[ -][A-Za-z]+)*$/</code><br>
+            <strong>Purpose:</strong> Letters, spaces, hyphens only
+        </div>
+        <div id="category-tests"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>5. Duplicate Word Detection (Advanced)</h2>
+        <div class="pattern">
+            <strong>Pattern:</strong> <code>/\b(\w+)\s+\1\b/i</code><br>
+            <strong>Purpose:</strong> Detect repeated words using back-reference
+        </div>
+        <div id="duplicate-tests"></div>
+    </div>
+
+    <script src="scripts/validators.js"></script>
+    <script>
+        // Test Description
+        const descTests = [
+            { input: "Lunch at cafeteria", expected: true },
+            { input: "Coffee", expected: true },
+            { input: "  Leading spaces", expected: false },
+            { input: "Trailing spaces  ", expected: false },
+            { input: "", expected: false },
+            { input: "Valid description", expected: true }
+        ];
+
+        const descContainer = document.getElementById('desc-tests');
+        descTests.forEach(test => {
+            const error = validateDescription(test.input);
+            const passed = (error === "" && test.expected) || (error !== "" && !test.expected);
+            descContainer.innerHTML += `
+                <div class="test-case">
+                    <strong>Input:</strong> "${test.input}"<br>
+                    <strong>Expected:</strong> ${test.expected ? 'Valid' : 'Invalid'}<br>
+                    <strong>Result:</strong> <span class="${passed ? 'pass' : 'fail'}">${passed ? 'PASS ✓' : 'FAIL ✗'}</span>
+                    ${error ? '<br><strong>Error:</strong> ' + error : ''}
+                </div>
+            `;
+        });
+
+        // Test Amount
+        const amountTests = [
+            { input: "12.50", expected: true },
+            { input: "100", expected: true },
+            { input: "0.99", expected: true },
+            { input: "-5", expected: false },
+            { input: "12.345", expected: false },
+            { input: "abc", expected: false },
+            { input: "0", expected: true }
+        ];
+
+        const amountContainer = document.getElementById('amount-tests');
+        amountTests.forEach(test => {
+            const error = validateAmount(test.input);
+            const passed = (error === "" && test.expected) || (error !== "" && !test.expected);
+            amountContainer.innerHTML += `
+                <div class="test-case">
+                    <strong>Input:</strong> "${test.input}"<br>
+                    <strong>Expected:</strong> ${test.expected ? 'Valid' : 'Invalid'}<br>
+                    <strong>Result:</strong> <span class="${passed ? 'pass' : 'fail'}">${passed ? 'PASS ✓' : 'FAIL ✗'}</span>
+                    ${error ? '<br><strong>Error:</strong> ' + error : ''}
+                </div>
+            `;
+        });
+
+        // Test Date
+        const dateTests = [
+            { input: "2025-02-15", expected: true },
+            { input: "2025-12-31", expected: true },
+            { input: "2025-01-01", expected: true },
+            { input: "15/02/2025", expected: false },
+            { input: "2025-13-01", expected: false },
+            { input: "2025-02-32", expected: false }
+        ];
+
+        const dateContainer = document.getElementById('date-tests');
+        dateTests.forEach(test => {
+            const error = validateDate(test.input);
+            const passed = (error === "" && test.expected) || (error !== "" && !test.expected);
+            dateContainer.innerHTML += `
+                <div class="test-case">
+                    <strong>Input:</strong> "${test.input}"<br>
+                    <strong>Expected:</strong> ${test.expected ? 'Valid' : 'Invalid'}<br>
+                    <strong>Result:</strong> <span class="${passed ? 'pass' : 'fail'}">${passed ? 'PASS ✓' : 'FAIL ✗'}</span>
+                    ${error ? '<br><strong>Error:</strong> ' + error : ''}
+                </div>
+            `;
+        });
+
+        // Test Category
+        const categoryTests = [
+            { input: "Food", expected: true },
+            { input: "Public Transport", expected: true },
+            { input: "Books-Supplies", expected: true },
+            { input: "Food123", expected: false },
+            { input: "Food_Drink", expected: false },
+            { input: "", expected: false }
+        ];
+
+        const categoryContainer = document.getElementById('category-tests');
+        categoryTests.forEach(test => {
+            const error = validateCategory(test.input);
+            const passed = (error === "" && test.expected) || (error !== "" && !test.expected);
+            categoryContainer.innerHTML += `
+                <div class="test-case">
+                    <strong>Input:</strong> "${test.input}"<br>
+                    <strong>Expected:</strong> ${test.expected ? 'Valid' : 'Invalid'}<br>
+                    <strong>Result:</strong> <span class="${passed ? 'pass' : 'fail'}">${passed ? 'PASS ✓' : 'FAIL ✗'}</span>
+                    ${error ? '<br><strong>Error:</strong> ' + error : ''}
+                </div>
+            `;
+        });
+
+        // Test Duplicate Words
+        const duplicateTests = [
+            { input: "coffee coffee", expected: true },
+            { input: "the the book", expected: true },
+            { input: "lunch at cafeteria", expected: false },
+            { input: "buy buy now", expected: true },
+            { input: "normal text", expected: false }
+        ];
+
+        const duplicateContainer = document.getElementById('duplicate-tests');
+        const duplicateRegex = /\b(\w+)\s+\1\b/i;
+        duplicateTests.forEach(test => {
+            const hasMatch = duplicateRegex.test(test.input);
+            const passed = hasMatch === test.expected;
+            duplicateContainer.innerHTML += `
+                <div class="test-case">
+                    <strong>Input:</strong> "${test.input}"<br>
+                    <strong>Expected:</strong> ${test.expected ? 'Has duplicate' : 'No duplicate'}<br>
+                    <strong>Result:</strong> <span class="${passed ? 'pass' : 'fail'}">${passed ? 'PASS ✓' : 'FAIL ✗'}</span>
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>
