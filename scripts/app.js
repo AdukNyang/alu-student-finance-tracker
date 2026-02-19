@@ -158,7 +158,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initial render
     renderTransactions();
     updateDashboard();
-        // Sorting state
+    
+    // ============ M4: CRUD Operations, Sorting, and Search ============
+    // The code above handles add, edit, delete transactions
+    // Below implements sorting and regex search functionality
+    
+    // Sorting state
     let sortColumn = null;
     let sortDirection = 'asc';
     
@@ -206,6 +211,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // ============ M4: Regex Search with Highlighting ============
+    
     // Searchbox functionality
     const searchInput = document.getElementById('search-input');
     const caseSensitiveCheckbox = document.getElementById('case-sensitive');
@@ -293,6 +300,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // ============ M5: Dashboard Statistics and Budget Cap ============
+    
     // Update dashboard statistics
     function updateDashboard() {
         const totalExpenses = getTotalExpenses();
@@ -301,6 +310,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const remaining = getRemainingBudget();
         const budgetAlert = document.getElementById('budget-alert');
 
+        // ============ M6: Data Persistence and Import/Export ============
+        
         //Handle budget cap setting
         const budgetCapInput = document.getElementById('budget-cap');
         budgetCapInput.addEventListener('change', function() {
