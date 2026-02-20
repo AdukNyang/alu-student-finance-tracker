@@ -1,6 +1,8 @@
 # Student Finance Tracker
 
-**Live Demo:** Coming soon (will be deployed on GitHub Pages)
+**Live Demo:** https://aduknyang.github.io/alu-student-finance-tracker/
+
+**Demo Video:** https://www.loom.com/share/eea4188bfc674ad3a2de41baa3c3a8e9
 
 A simple web app that helps students track their spending, set budgets, and see where their money goes. Built with vanilla HTML, CSS, and JavaScript - no frameworks, just the basics done right.
 
