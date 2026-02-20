@@ -164,8 +164,10 @@ button:hover {
     left: 0;
     background: #a712fd;
     color: white;
-    padding: 0.5rem;
+    padding: 0.5rem 1rem;
     text-decoration: none;
+    z-index: 9999;
+    border-radius: 0 0 5px 0;
 }
 
 .skip-link:focus {

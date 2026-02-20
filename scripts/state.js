@@ -39,6 +39,7 @@ function deleteTransaction(id) {
     const index = transactions.findIndex(txn => txn.id === id);
     if (index !== -1) {
         transactions.splice(index, 1);
+        saveToStorage();
         return true;
     }
     return false;

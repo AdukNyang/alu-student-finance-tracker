@@ -271,7 +271,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Highlight matches in description
             const highlightedDesc = txn.description.replace(regex, function(match) {
-                return '<mark>' + match + '';
+                return '<mark>' + match + '</mark>';
             });
             
             row.innerHTML = `
