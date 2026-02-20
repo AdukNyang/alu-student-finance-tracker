@@ -302,6 +302,67 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ============ M5: Dashboard Statistics and Budget Cap ============
     
+    // ============ M6: Data Persistence and Import/Export ============
+    
+    //Handle budget cap setting
+    const budgetCapInput = document.getElementById('budget-cap');
+    budgetCapInput.addEventListener('change', function() {
+        setBudgetCap(this.value);
+        updateDashboard();
+        alert('Budget cap set to $' + this.value);
+    });
+
+    //Handle export button
+    const exportBtn = document.getElementById('export-btn');
+    exportBtn.addEventListener('click', function() {
+        if (getTransactions().length === 0) {
+            alert('No data to export!');
+            return;
+        }
+        exportData();
+        alert('Data exported successfully!');
+    });
+
+    //Handle import button
+    const importBtn = document.getElementById('import-btn');
+    const importFile = document.getElementById('import-file');
+
+    importBtn.addEventListener('click', function() {
+        importFile.click();
+    });
+
+    importFile.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            try {
+                const data = JSON.parse(event.target.result);
+                const importResult = importData(data);
+
+                if (importResult.success) {
+                    alert('Data imported successfully! ' + data.length + ' transactions loaded.');
+                    renderTransactions();
+                    updateDashboard();
+                } else {
+                    alert('Import failed: ' + importResult.error);
+                }
+            } catch (error) {
+                alert('Invalid JSON file: ' + error.message);
+            }
+        };
+        reader.readAsText(file);
+
+        // Reset file input
+        importFile.value = '';
+    });
+
+    //Handle exchange rate changes
+    document.getElementById('usd-rate').addEventListener('change', saveSettings);
+    document.getElementById('eur-rate').addEventListener('change', saveSettings);
+    document.getElementById('gbp-rate').addEventListener('change', saveSettings);
+    document.getElementById('base-currency').addEventListener('change', saveSettings);
+    
     // Update dashboard statistics
     function updateDashboard() {
         const totalExpenses = getTotalExpenses();
@@ -309,68 +370,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const last7Days = getLast7DaysTotal();
         const remaining = getRemainingBudget();
         const budgetAlert = document.getElementById('budget-alert');
-
-        // ============ M6: Data Persistence and Import/Export ============
-        
-        //Handle budget cap setting
-        const budgetCapInput = document.getElementById('budget-cap');
-        budgetCapInput.addEventListener('change', function() {
-            setBudgetCap(this.value);
-            updateDashboard();
-            alert('Budget cap set to $' + this.value);
-
-        });
-
-        //Handle export button
-        const exportBtn = document.getElementById('export-btn');
-        exportBtn.addEventListener('click', function() {
-            if (getTransactions().length === 0) {
-                alert('No data to export!');
-                return;
-            }
-            exportData();
-            alert('Data exported successfully!');
-        });
-
-        //Handle import button
-        const importBtn = document.getElementById('import-btn');
-        const importFile = document.getElementById('import-file');
-
-        importBtn.addEventListener('click', function() {
-            importFile.click();
-        });
-
-        importFile.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                try {
-                    const data = JSON.parse(event.target.result);
-                    const importResult = importData(data);
-
-                    if (importResult.success) {
-                        alert('Data imported successfully! ' + data.length + ' transactions loaded.');
-                        renderTransactions();
-                        updateDashboard();
-                    } else {
-                        alert('Import failed: ' + importResult.error);
-                    }
-                } catch (error) {
-                    alert('Invalid JSON file: ' + error.message);
-                }
-            };
-            reader.readAsText(file);
-
-            // Reset file input
-            importFile.value = '';
-        });
-
-        //Handle exchange rate changes
-        document.getElementById('usd-rate').addEventListener('change', saveSettings);
-        document.getElementById('eur-rate').addEventListener('change', saveSettings);
-        document.getElementById('gbp-rate').addEventListener('change', saveSettings);
-        document.getElementById('base-currency').addEventListener('change', saveSettings);
         
         // Update metrics
         document.querySelector('.metrics div:nth-child(1)').textContent = 
