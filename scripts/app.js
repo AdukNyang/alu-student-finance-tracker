@@ -402,4 +402,12 @@ document.addEventListener('DOMContentLoaded', function() {
             budgetAlert.textContent = '';
         }
     }
+    
+    // Clear all data button
+    document.getElementById('clear-all-btn').addEventListener('click', function() {
+        if (confirm('Are you sure you want to delete ALL transactions? This cannot be undone!')) {
+            localStorage.clear();
+            location.reload();
+        }
+    });
 });
